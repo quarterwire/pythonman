@@ -31,7 +31,7 @@
 	{@html horizonDark}
 </svelte:head>
 <main>
-	<div class="container flex h-[80vh] flex-col items-center justify-center gap-20">
+	<div class=" flex h-screen flex-col items-center justify-center gap-10">
 		<div class="flex items-center justify-center">
 			<form class="flex border border-gray-200">
 				<div class="relative inline-block text-left">
@@ -93,7 +93,7 @@
 				>Send</button
 			>
 		</div>
-		<div class="flex flex-col items-start overflow-y-auto bg-[#1d1d1d]">
+		<div class="flex h-40 flex-col items-start overflow-y-auto bg-[#1d1d1d]">
 			<div>
 				<ul class="flex flex-row text-xs">
 					<li class="bg-[#1d1d1d] p-3 px-6 text-white">Body</li>
@@ -109,7 +109,7 @@
 					--padding-left="2em"
 					--padding-right="1em"
 					wrapLines
-					class="h-full w-[68vw] overflow-y-auto"
+					class="h-full w-[62vw] overflow-y-auto"
 				/></HighlightAuto
 			>
 		</div>
