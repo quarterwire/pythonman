@@ -1,28 +1,28 @@
 <script lang="ts">
-	import { methods } from '$lib/stores/methods.js';
-	let dropDownVisible: boolean = $state(false);
-	let activeMethod: string = $state('GET');
-	let inputValue: string = $state('');
+	import { methods } from '$lib/stores/methods';
 	import { HighlightAuto, LineNumbers } from 'svelte-highlight';
 	import horizonDark from 'svelte-highlight/styles/horizon-dark';
+
+	let dropDownVisible = false;
+	let activeMethod = 'GET';
+	let inputValue = '';
+	let code = '';
+	let hlRef: HighlightAuto;
+
 	function toggleVisible() {
 		dropDownVisible = !dropDownVisible;
 	}
+
 	function setActiveMethod(method: string) {
 		activeMethod = method;
-
-		dropDownVisible = false; // Close dropdown after selecting
+		dropDownVisible = false;
 	}
 
-	let code = $state('');
-	let hlRef: HighlightAuto;
 	async function handleRequest() {
-		switch (activeMethod) {
-			case 'GET':
-				const res = await fetch(inputValue);
-				code = await res.json();
-				code = JSON.stringify(code, null, 2);
-				hlRef.highlightCode();
+		if (activeMethod === 'GET') {
+			const res = await fetch(inputValue);
+			code = JSON.stringify(await res.json(), null, 2);
+			code = `${code}`;
 		}
 	}
 </script>
@@ -30,18 +30,27 @@
 <svelte:head>
 	{@html horizonDark}
 </svelte:head>
-<main>
-	<div class=" flex h-screen flex-col items-center justify-center gap-10">
-		<div class="flex items-center justify-center">
-			<form class="flex border border-gray-200">
+
+<main class="grid h-screen grid-cols-5 grid-rows-[8%_auto_30%] overflow-hidden">
+	<!-- Navbar -->
+	<div class="col-span-5 flex items-center justify-center bg-gray-800 text-lg font-bold text-white">
+		Header
+	</div>
+
+	<!-- Sidebar -->
+	<div class="col-span-1 row-span-2 bg-gray-700 p-4 text-white">Sidebar</div>
+
+	<!-- Main Content -->
+	<div class="col-span-4 p-4">
+		<div class="flex items-center">
+			<form class="flex w-full border border-gray-200">
 				<div class="relative inline-block text-left">
-					<!-- Dropdown Button -->
 					<button
 						type="button"
 						onclick={toggleVisible}
-						class="inline-flex h-full w-40 items-center justify-between rounded-md rounded-r-none border border-gray-300 p-4 text-lg font-semibold {methods[
+						class="inline-flex h-full w-40 items-center justify-between rounded-md rounded-r-none border border-r-0 border-gray-300 p-4 text-lg font-semibold {methods[
 							activeMethod
-						]} "
+						]}"
 						id="menu-button"
 						aria-expanded={dropDownVisible}
 						aria-haspopup="true"
@@ -61,7 +70,6 @@
 						</svg>
 					</button>
 
-					<!-- Dropdown Menu -->
 					{#if dropDownVisible}
 						<div class="absolute left-0 z-10 mt-1 w-40 rounded-md bg-gray-200 shadow-lg">
 							{#each Object.entries(methods) as [method, color]}
@@ -77,11 +85,10 @@
 					{/if}
 				</div>
 
-				<!-- Input Field -->
 				<input
 					name="URL"
 					bind:value={inputValue}
-					class="w-[50vw] rounded-md rounded-l-none border-2 border-gray-500 p-2 focus:{methods[
+					class="w-full rounded-md rounded-l-none border-2 border-gray-200 p-2 focus:{methods[
 						activeMethod
 					]} focus:outline-none"
 					placeholder="URL"
@@ -89,11 +96,16 @@
 			</form>
 			<button
 				onclick={handleRequest}
-				class="duration-350 mx-2 cursor-pointer rounded-md border-gray-300 bg-blue-400 p-5 px-8 font-semibold text-white transition hover:bg-blue-500"
-				>Send</button
+				class="mx-2 cursor-pointer rounded-md border-gray-300 bg-blue-400 p-5 px-8 font-semibold text-white transition hover:bg-blue-500"
 			>
+				Send
+			</button>
 		</div>
-		<div class="flex h-40 flex-col items-start overflow-y-auto bg-[#1d1d1d]">
+	</div>
+
+	<!-- JSON Response Section -->
+	<div class="col-span-4 overflow-hidden bg-[#1d1d1d] p-4">
+		<div class="flex h-full flex-col items-start">
 			<div>
 				<ul class="flex flex-row text-xs">
 					<li class="bg-[#1d1d1d] p-3 px-6 text-white">Body</li>
@@ -109,9 +121,9 @@
 					--padding-left="2em"
 					--padding-right="1em"
 					wrapLines
-					class="h-full w-[62vw] overflow-y-auto"
-				/></HighlightAuto
-			>
+					class="h-full overflow-y-auto"
+				/>
+			</HighlightAuto>
 		</div>
 	</div>
 </main>
