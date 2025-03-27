@@ -111,22 +111,34 @@
 		<div class="flex h-full flex-col items-start justify-center">
 			<div>
 				<ul class="flex flex-row text-xs">
-					<li class="text-text-primary p-3 px-6">Body</li>
-					<li class="text-text-primary p-3 px-6">Headers</li>
-					<li class="text-text-primary p-3 px-6">Cookies</li>
+					<li class="text-text-secondary hover:text-text-primary cursor-pointer p-3 px-6">Body</li>
+					<li class="text-text-secondary hover:text-text-primary cursor-pointer p-3 px-6">
+						Headers
+					</li>
+					<li class="text-text-secondary hover:text-text-primary cursor-pointer p-3 px-6">
+						Cookies
+					</li>
 				</ul>
 			</div>
-			<Highlight language={typescript} {code} bind:this={hlRef} let:highlighted>
-				<LineNumbers
-					{highlighted}
-					--font-size="12px"
-					--border-color="#30363d"
-					--padding-left="2em"
-					--padding-right="1em"
-					wrapLines
-					class="ml-6 h-full overflow-y-auto text-xs"
-				/>
-			</Highlight>
+			{#if code == ''}
+				<p
+					class="text-text-primary flex h-full w-full items-center justify-center text-center text-lg"
+				>
+					Make a request! :)
+				</p>
+			{:else}
+				<Highlight language={typescript} {code} bind:this={hlRef} let:highlighted>
+					<LineNumbers
+						{highlighted}
+						--font-size="12px"
+						--border-color="#30363d"
+						--padding-left="2em"
+						--padding-right="1em"
+						wrapLines
+						class="ml-6 h-full overflow-y-auto text-xs"
+					/>
+				</Highlight>
+			{/if}
 		</div>
 	</div>
 </main>
